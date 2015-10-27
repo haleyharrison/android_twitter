@@ -49,14 +49,20 @@ public class MainActivity extends ListActivity {
             @Override
             public void onClick(View v) {
                 String tweetContent = mTweetText.getText().toString();
-                Tweet tweet = new Tweet(tweetContent, mUser);
-                tweet.save();
-                mTweets.add(tweet);
-                mAdapter.notifyDataSetChanged();
+                if (tweetContent.length() > 140) {
+                    int excessCharacters = tweetContent.length() - 140;
+                    String warningText = "Oops! Please remove " + excessCharacters + " characters before submitting your tweet!";
+                    Toast.makeText(MainActivity.this, warningText, Toast.LENGTH_LONG).show();
+                } else {
+                    Tweet tweet = new Tweet(tweetContent, mUser);
+                    tweet.save();
+                    mTweets.add(tweet);
+                    mAdapter.notifyDataSetChanged();
 
-                mTweetText.setText("");
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    mTweetText.setText("");
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
             }
         });
     }
