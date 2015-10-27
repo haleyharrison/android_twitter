@@ -2,16 +2,19 @@ package com.epicodus.twitter_clone.models;
 
 import android.content.Context;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.epicodus.twitter_clone.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 @Table(name = "Tweets", id = "_id")
-public class Tweet {
+public class Tweet extends Model {
 
     @Column(name = "Content")
     private String mContent;
@@ -56,5 +59,9 @@ public class Tweet {
         SimpleDateFormat formatter = new SimpleDateFormat(context.getString(R.string.time_format));
         formatter.setTimeZone(TimeZone.getTimeZone(context.getString(R.string.timezone)));
         return formatter.format(mCreatedAt);
+    }
+
+    public static List<Tweet> all() {
+        return new Select().from(Tweet.class).execute();
     }
 }

@@ -1,19 +1,29 @@
 package com.epicodus.twitter_clone.ui;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.epicodus.twitter_clone.R;
+import com.epicodus.twitter_clone.models.Tweet;
 import com.epicodus.twitter_clone.models.User;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends ListActivity {
 
     private SharedPreferences mPreferences;
     private User mUser;
+    private EditText mTweetText;
+    private Button mSubmitTweetButton;
+    private ArrayList<Tweet> mTweets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +36,24 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
         }
+
+        mTweetText = (EditText) findViewById(R.id.newTweetEdit);
+        mSubmitTweetButton = (Button) findViewById(R.id.tweetSubmitButton);
+        mTweets = (ArrayList) Tweet.all();
+
+        mSubmitTweetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tweetContent = mTweetText.getText().toString();
+                Tweet tweet = new Tweet(tweetContent, mUser);
+                tweet.save();
+                mTweets.add(tweet);
+
+                mTweetText.setText("");
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
     }
 
     private boolean isRegistered() {
