@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.epicodus.twitter_clone.R;
+import com.epicodus.twitter_clone.adapters.TweetAdapter;
 import com.epicodus.twitter_clone.models.Tweet;
 import com.epicodus.twitter_clone.models.User;
 
@@ -24,6 +25,7 @@ public class MainActivity extends ListActivity {
     private EditText mTweetText;
     private Button mSubmitTweetButton;
     private ArrayList<Tweet> mTweets;
+    private TweetAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class MainActivity extends ListActivity {
         mTweetText = (EditText) findViewById(R.id.newTweetEdit);
         mSubmitTweetButton = (Button) findViewById(R.id.tweetSubmitButton);
         mTweets = (ArrayList) Tweet.all();
+        mAdapter = new TweetAdapter(this, mTweets);
+        setListAdapter(mAdapter);
 
         mSubmitTweetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +52,7 @@ public class MainActivity extends ListActivity {
                 Tweet tweet = new Tweet(tweetContent, mUser);
                 tweet.save();
                 mTweets.add(tweet);
+                mAdapter.notifyDataSetChanged();
 
                 mTweetText.setText("");
                 InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
