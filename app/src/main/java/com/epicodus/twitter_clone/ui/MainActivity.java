@@ -67,6 +67,7 @@ public class MainActivity extends ListActivity {
         });
     }
 
+
     private boolean isRegistered() {
         String username = mPreferences.getString("username", null);
         if (username == null) {
